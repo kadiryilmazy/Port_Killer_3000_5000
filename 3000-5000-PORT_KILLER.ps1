@@ -1,6 +1,12 @@
-$ports = @(3000, 5000)
+$ports = Read-Host "Kontrol edilecek portları virgülle ayrılmış olarak girin (örneğin: 3000,5000)"
+$portList = $ports -split ',' | ForEach-Object { $_.Trim() }
 
-foreach ($port in $ports) {
+foreach ($port in $portList) {
+    if ($port -notmatch '^\d+$') {
+        Write-Warning "$port geçerli bir port numarası değil. Atlanıyor."
+        continue
+    }
+
     Write-Host "$port portu kontrol ediliyor..."
     $connections = Get-NetTCPConnection -LocalPort $port
 
